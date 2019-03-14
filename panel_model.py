@@ -13,7 +13,7 @@ import warnings
 from missingpy import MissForest
 from linearmodels import PanelOLS
 
-def panel_data(train):
+def panel_data(train, years_ahead=1):
     """
     It uses a random forest trained on the observed values of a data matrix (selected series codes except those
     in submit_rows_index) to predict the missing values.
@@ -56,7 +56,7 @@ def panel_data(train):
     # combine the updated feature matrix and responses
     feature=predictors_new.isna().sum()<=0    # change to 1
     panel_left=predictors_new.iloc[:,feature.values]
-    panel_comb=pd.merge(panel.iloc[:,0:11], panel_left.shift(1))
+    panel_comb=pd.merge(panel.iloc[:,0:11], panel_left.shift(years_ahead))
     
     # Split prediction and target
     panel_train=panel_comb.loc[panel_comb.year<2007]
